@@ -1,5 +1,4 @@
 var devTAIGA = "/dev/ttyUSB1";
-var devProduction = "/dev/ttyUSB2";
 
 var webserverPort = 8080;
 
