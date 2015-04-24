@@ -48,8 +48,8 @@ server.on('listening', function () {
 
 server.on('message', function (message, remote) {
 	console.log(remote.address + ':' + remote.port +' - ' + message);
-	clientAddress = remote.address;
-	clientPort = remote.port;
+	var newClient = [remote.address, remote.port]
+	clients.push(newClient);
 });
 
 server.bind(SERVER_PORT);
@@ -64,9 +64,9 @@ var interval = setInterval( function() {
 	stateVector.push(0.7);
  	stateVector.push(0.3);
 	var message = new Buffer(counter.toString() + ':' + stateVector.toString());
-		for(var i = 0; i < clients.length; i++){
-			server.send(message, 0, message.length, clients[i][1], clients[i][0], function(err, bytes) {
-				if (err) throw err;
-			});
-		}
+	for(var i = 0; i < clients.length; i++){
+		server.send(message, 0, message.length, clients[i][1], clients[i][0], function(err, bytes) {
+			if (err) throw err;
+		});
+	}
 }, 1);
