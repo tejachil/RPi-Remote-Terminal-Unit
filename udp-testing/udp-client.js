@@ -1,6 +1,6 @@
-var SERVER_HOST = '192.168.2.101';
-var SERVER_PORT = 33333;
-var CLIENT_PORT = 33334;
+var SERVER_HOST = '128.173.52.36';
+var SERVER_PORT = 32392;
+var CLIENT_PORT = 32392;
 
 var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
