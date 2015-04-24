@@ -8,8 +8,9 @@ var dgram = require('dgram'); var server = dgram.createSocket('udp4');
 
 var stateVector = [];
 
-// Setup Serial Port var SerialPort = require("serialport") var 
-serialTAIGA = new SerialPort.SerialPort(DEV_TAIGA, {
+// Setup Serial Port 
+var SerialPort = require("serialport") 
+var serialTAIGA = new SerialPort.SerialPort(DEV_TAIGA, {
   baudrate: 921600, parser: SerialPort.parsers.readline("---\n", 
 "binary")
 }, false); // this is the openImmediately flag [default is true]
