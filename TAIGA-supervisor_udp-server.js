@@ -8,6 +8,9 @@ var dgram = require('dgram'); var server = dgram.createSocket('udp4');
 
 var stateVector = [];
 
+var ADD_STRING = 'I am a supervisory HMI and want to monitor the Pendulum.'
+var REMOVE_STRING = 'Stop Streaming'
+
 // Setup Serial Port 
 var SerialPort = require("serialport") 
 var serialTAIGA = new SerialPort.SerialPort(DEV_TAIGA, {
@@ -47,9 +50,17 @@ server.on('listening', function () {
 });
 
 server.on('message', function (message, remote) {
-	console.log(remote.address + ':' + remote.port +' - ' + message);
-	var newClient = [remote.address, remote.port]
-	clients.push(newClient);
+	var client = [remote.address, remote.port]
+	if(message.indexOf(ADD_STRING) > -1){
+		if(clients.indexOf(newClient) <= -1){
+			console.log('Adding ' remote.address + ':' + remote.port);
+			clients.push(client);
+		}
+	}
+	else if(message.indexOf(REMOVE_STRING) > -1){
+		console.log('Removing ' remote.address + ':' + remote.port);
+		clients.splice(clients.indexOf(client), 1);
+	}
 });
 
 server.bind(SERVER_PORT);
