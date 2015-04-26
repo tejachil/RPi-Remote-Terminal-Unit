@@ -51,13 +51,9 @@ server.on('listening', function () {
 
 server.on('message', function (message, remote) {
 	var client = [remote.address, remote.port]
-	if(message.toString().indexOf(ADD_STRING) > -1){
-		if(clients.indexOf(client) <= -1){
-			console.log('Adding '+ remote.address + ':' + remote.port);
-			clients.push(client);
-		}
-		else
-			console.log('Already exists '+ remote.address + ':' + remote.port);
+	if(message.toString().indexOf(ADD_STRING) > -1){		
+		console.log('Adding '+ remote.address + ':' + remote.port);
+		clients.push(client);
 	}
 	else if(message.toString().indexOf(REMOVE_STRING) > -1){
 		console.log('Removing ' + remote.address + ':' + remote.port);
