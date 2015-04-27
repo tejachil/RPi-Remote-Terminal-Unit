@@ -33,7 +33,6 @@ serialTAIGA.open(function (error) {
 		console.log(stateVector);
 		
 		var message = new Buffer(counter.toString() + ':' + stateVector.toString());
-
 		for(var i = 0; i < clients.length; i++){
 			server.send(message, 0, message.length, clients[i][1], clients[i][0], function(err, bytes) {
 				if (err) throw err;
@@ -67,7 +66,7 @@ var interval = setInterval( function() {
 	counter++;
 	
 	// following lines for debugging without serial port
-	stateVector.length = 0;
+	/*stateVector.length = 0;
 	stateVector.push(1.2);
 	stateVector.push(0.1);
 	stateVector.push(0.7);
@@ -77,5 +76,5 @@ var interval = setInterval( function() {
 		server.send(message, 0, message.length, clients[i][1], clients[i][0], function(err, bytes) {
 			if (err) throw err;
 		});
-	}
+	}*/
 }, 1);
