@@ -1,4 +1,4 @@
-var SERVER_PORT = 32392; var DEV_TAIGA = "/dev/ttyUSB1";
+var SERVER_PORT = 32392; var DEV_TAIGA = "/dev/ttyUSB0";
 
 var clients = [];
 
