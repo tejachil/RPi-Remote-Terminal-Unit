@@ -21,11 +21,14 @@ void setup(){
   udp.listen( true );           // and wait for incoming message
   
   size(500, 500);
+  background(0);
   smooth();
   frameRate(25);
 }
 
 void draw(){
+  fill(0, 120);
+  rect(0, 0, width, height);
   
   translate(width/2, height/2);
   noFill();
@@ -35,7 +38,7 @@ void draw(){
   translate(150*sin(stateVector[0]), 150*cos(stateVector[0]));
    
   // Rotate and draw the pendulum
-  rotate(stateVector[1]-HALF_PI);
+  rotate(-stateVector[1]-HALF_PI);
   drawPendulum();
 
 }
@@ -98,6 +101,5 @@ void receive( byte[] data, String ip, int port ) {  // <-- extended handler
   message = message.substring(message.indexOf(':')+1, message.length());
   String [] statesStringArray;
   statesStringArray = split(message,',');
-  stateVector = float(statesStringArray);
-  println(timestamp);
+  stateVector = float(statesStringArray);  
 }
