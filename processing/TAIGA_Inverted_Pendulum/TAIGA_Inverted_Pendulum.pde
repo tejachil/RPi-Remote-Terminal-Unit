@@ -7,6 +7,8 @@ int CLIENT_PORT = 32392;
 String ADD_STRING = "I am a supervisory HMI and want to monitor the Pendulum.";
 String REMOVE_STRING = "Stop Streaming";
 
+boolean addFlag = false;
+
 UDP udp;  // define the UDP object
 
 int timestamp;
@@ -24,7 +26,6 @@ void setup(){
   udp.listen( true );           // and wait for incoming message
   
   size(500, 500);
-  textSize(16);
   background(0);
   smooth();
   frameRate(25);
@@ -46,8 +47,12 @@ void draw(){
   line(0, 50, 0, 165);
   fill(255);
   textAlign(CENTER);
+  textSize(18);
   text("TAIGA Rotary Inverted Pendulum Experiment", 0, 20-height/2);
-  text(stateVectorString, 0, 60-height/2);
+  textSize(16);
+  text("Press 'a' to add yourself to server and 'r' to remove.", 0, 50-height/2);
+  text("Press 'x' to exit.", 0, 70-height/2);
+  text(stateVectorString, 0, 100-height/2);
   text("45", 140, 145);
   text("-45", -145, 145);
   text('0', -1, 185);
@@ -78,13 +83,16 @@ void drawPendulum()
 
 
 void keyPressed() {
-  if(key == 'a'){
+  if(key == 'a' && addFlag == false){
+    addFlag = true;
     udp.send(ADD_STRING, SERVER_HOST, SERVER_PORT);
   }
   if(key == 'r'){
+    addFlag = false;
     udp.send(REMOVE_STRING, SERVER_HOST, SERVER_PORT);
   }
   if(key == 'x'){
+    udp.send(REMOVE_STRING, SERVER_HOST, SERVER_PORT);
     exit();
   }
 }
