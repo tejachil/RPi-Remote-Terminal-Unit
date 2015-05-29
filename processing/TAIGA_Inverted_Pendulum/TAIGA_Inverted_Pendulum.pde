@@ -15,24 +15,43 @@ float [] stateVector = {0, 0, 0, 0};
 float alpha = 0.0;
 float theta = 0.0;
 
+String stateVectorString = "[0,0,0,0]";
+
+
 void setup(){
   udp = new UDP( this, CLIENT_PORT);  // create datagram connection on port 33335   
   //udp.log( true );            // <-- print out the connection activity
   udp.listen( true );           // and wait for incoming message
   
   size(500, 500);
+  textSize(16);
   background(0);
   smooth();
   frameRate(25);
 }
 
 void draw(){
-  fill(0, 120);
+  fill(120,120,120);
   rect(0, 0, width, height);
   
+    
   translate(width/2, height/2);
   noFill();
   arc(0, 0, 300, 300, 0, PI);
+  
+  pushMatrix();
+  arc(0, 0, 170, 170, PI/4, 3*PI/4);
+  line(60, 60, 130, 130);
+  line(-60, 60, -130, 130);
+  line(0, 50, 0, 165);
+  fill(255);
+  textAlign(CENTER);
+  text("TAIGA Rotary Inverted Pendulum Experiment", 0, 20-height/2);
+  text(stateVectorString, 0, 60-height/2);
+  text("45", 140, 145);
+  text("-45", -145, 145);
+  text('0', -1, 185);
+  popMatrix();
 
 
   translate(150*sin(stateVector[0]), 150*cos(stateVector[0]));
@@ -40,48 +59,23 @@ void draw(){
   // Rotate and draw the pendulum
   rotate(-stateVector[1]-HALF_PI);
   drawPendulum();
-
 }
 
 void drawPendulum()
 {
   // draw line
-  stroke(255);
-  strokeWeight(3);
+  stroke(0,0,255);
+  strokeWeight(10);
   line(0, 0, 160, 0);
  
   // draw circle
-  fill(255, 0, 0);
-  stroke(255, 255, 0);
-  strokeWeight(2);
-  ellipse(160, 0, 25, 25);
+  //fill(0, 0, 255);
+  //stroke(255, 255, 0);
+  strokeWeight(4);
+  stroke(255);
+  //ellipse(160, 0, 25, 25);
 }
 
-void drawBase(){
-  pushMatrix();
-  translate(width/2,height/2+150,0);
-  rotateX(-PI/6);
-  rotateY(PI/3);
-  fill(0);
-  stroke(255);
-  box(100,10,100);
-  translate(0,-90,0);
-  box(100,10,100);
-  translate(0,90,0);
-  translate(-45,-45,-45);
-  box(10,80,10);
-  translate(90,0,90);
-  box(10,80,10);
-  translate(-90,0,0);
-  box(10,80,10);
-  translate(90,0,-90);
-  box(10,80,10);
-  popMatrix(); 
-  translate(width/2,height/2+50,0);
-  rotateX(-PI/6);
-  rotateY(PI/3);
-  box(20,10,200);
-}
 
 void keyPressed() {
   if(key == 'a'){
@@ -101,5 +95,6 @@ void receive( byte[] data, String ip, int port ) {  // <-- extended handler
   message = message.substring(message.indexOf(':')+1, message.length());
   String [] statesStringArray;
   statesStringArray = split(message,',');
-  stateVector = float(statesStringArray);  
+  stateVector = float(statesStringArray);
+  stateVectorString = message;  
 }
