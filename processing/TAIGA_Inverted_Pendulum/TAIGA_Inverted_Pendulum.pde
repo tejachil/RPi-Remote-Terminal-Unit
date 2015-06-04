@@ -21,6 +21,9 @@ String stateVectorString = "[0,0,0,0]";
 
 
 void setup(){
+  String[] ip = loadStrings("http://icanhazip.com/");
+  if(ip[0].equals(SERVER_HOST))  SERVER_HOST = "192.168.1.2";
+  
   udp = new UDP( this, CLIENT_PORT);  // create datagram connection on port 33335   
   //udp.log( true );            // <-- print out the connection activity
   udp.listen( true );           // and wait for incoming message
@@ -98,7 +101,7 @@ void keyPressed() {
     exit();
   }
   if(key == '0'){
-    udp.send("SP" + fromCharCode(20), SERVER_HOST, SERVER_PORT);
+    udp.send("SP" + fromCharCode(34), SERVER_HOST, SERVER_PORT);
   }
 }
 
