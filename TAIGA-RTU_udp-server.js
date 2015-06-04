@@ -10,12 +10,12 @@ var stateVector = [];
 
 var ADD_STRING = 'I am a supervisory HMI and want to monitor the Pendulum.'
 var REMOVE_STRING = 'Stop Streaming'
+var SETPOINT_HEADER = 'SP'
 
 // Setup Serial Port 
 var SerialPort = require("serialport") 
 var serialTAIGA = new SerialPort.SerialPort(DEV_TAIGA, {
-  baudrate: 921600, parser: SerialPort.parsers.readline("---\n", 
-"binary")
+  baudrate: 921600, parser: SerialPort.parsers.readline("---\n", "binary")
 }, false); // this is the openImmediately flag [default is true]
 
 serialTAIGA.open(function (error) {
@@ -60,23 +60,13 @@ server.on('message', function (message, remote) {
 		console.log('Removing ' + remote.address + ':' + remote.port);
 		clients.splice(clients.indexOf(client), 1);
 	}
+	else if(message.toString().indexOf(SETPOINT_HEADER)){
+		serialTAIGA.write(message.toString());
+	}
 });
 
 server.bind(SERVER_PORT);
 
 var interval = setInterval( function() {
 	counter++;
-	
-	// following lines for debugging without serial port
-	/*stateVector.length = 0;
-	stateVector.push(1.2);
-	stateVector.push(0.1);
-	stateVector.push(0.7);
- 	stateVector.push(0.3);
-	var message = new Buffer(counter.toString() + ':' + stateVector.toString());
-	for(var i = 0; i < clients.length; i++){
-		server.send(message, 0, message.length, clients[i][1], clients[i][0], function(err, bytes) {
-			if (err) throw err;
-		});
-	}*/
 }, 1);
