@@ -1,4 +1,4 @@
-var SERVER_PORT = 32392; var DEV_TAIGA = "/dev/ttyUSB0";
+var SERVER_PORT = 32392; var DEV_TAIGA = "/dev/ttyUSB1";
 
 var clients = [];
 
@@ -32,7 +32,7 @@ serialTAIGA.open(function (error) {
 		stateVector.push(((data.charCodeAt(12)<< 24) | ((data.charCodeAt(13)&0xFF) << 16) | ((data.charCodeAt(14)&0xFF) << 8) | ((data.charCodeAt(15)&0xFF)))/1000);
 		stateVector.push(((data.charCodeAt(16)<< 24) | ((data.charCodeAt(17)&0xFF) << 16) | ((data.charCodeAt(18)&0xFF) << 8) | ((data.charCodeAt(19)&0xFF)))/10000);
 		
-		console.log(stateVector);
+		//console.log(stateVector);
 		
 		var message = new Buffer(counter.toString() + ':' + stateVector.toString());
 		for(var i = 0; i < clients.length; i++){
