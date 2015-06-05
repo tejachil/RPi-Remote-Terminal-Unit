@@ -19,6 +19,8 @@ float theta = 0.0;
 
 String stateVectorString = "[0,0,0,0]";
 
+float setPoint = -30;
+String spString = "";
 
 void setup(){
   String[] ip = loadStrings("http://icanhazip.com/");
@@ -61,6 +63,13 @@ void draw(){
   text('0', -1, 185);
   popMatrix();
 
+  stroke(255,0,0);
+  strokeWeight(2);
+  line(0,0, 160*cos(radians(90-setPoint)), 160*sin(radians(setPoint+90)));
+  fill(150,20,20);
+  text("Set-Point = " + spString, 0, 140-height/2);
+  fill(255);
+  text("Drag read line and release to update setpoint", 0, 480-height/2);
 
   translate(150*sin(stateVector[0]), 150*cos(stateVector[0]));
    
@@ -70,8 +79,7 @@ void draw(){
   popMatrix();
 }
 
-void drawPendulum()
-{
+void drawPendulum(){
   rotate(-stateVector[1]-HALF_PI);
   // draw line
   stroke(0,0,255);
@@ -104,6 +112,29 @@ void keyPressed() {
     udp.send("SP" + fromCharCode(34), SERVER_HOST, SERVER_PORT);
   }
 }
+
+void mouseDragged(){
+  int x = mouseX-250;
+  int y = mouseY-250; 
+  
+  if(y>0){
+    setPoint = degrees(atan(1.0*x/y));
+  }
+}
+
+void mouseReleased() {
+  int spInt = (int)setPoint;
+  spString = str(spInt);
+  byte spCode = 0;
+  spCode = (byte)(spInt);
+  if(spInt < 0){
+    spCode = (byte)(-spInt);
+    spCode |= 0x80;
+  }
+  udp.send("SP" + fromCharCode((int)(0xFF & spCode)), SERVER_HOST, SERVER_PORT);
+  //println("Sent the following SP command: " + (int)setPoint);
+}
+
 
 void receive( byte[] data, String ip, int port ) {  // <-- extended handler
   String message = new String( data );
