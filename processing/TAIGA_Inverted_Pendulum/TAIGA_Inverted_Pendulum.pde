@@ -139,7 +139,7 @@ void mouseReleased() {
 void receive( byte[] data, String ip, int port ) {  // <-- extended handler
   String message = new String( data );
   timestamp =  Integer.parseInt(message.substring(0,message.indexOf(':')));
-  message = message.substring(message.indexOf(':')+1, message.length());
+  message = message.substring(message.indexOf(':')+1, message.indexOf(';'));
   String [] statesStringArray;
   statesStringArray = split(message,',');
   stateVector = float(statesStringArray);
