@@ -127,12 +127,14 @@ void mouseReleased() {
   spString = str(spInt);
   byte spCode = 0;
   spCode = (byte)(spInt);
+  byte [] sendBuff = {'S', 'P', ' '};
   if(spInt < 0){
     spCode = (byte)(-spInt);
     spCode |= 0x80;
   }
-  udp.send("SP" + fromCharCode((int)(0xFF & spCode)), SERVER_HOST, SERVER_PORT);
-  //println("Sent the following SP command: " + (int)setPoint);
+  sendBuff[2] = spCode;
+  
+  udp.send(sendBuff, SERVER_HOST, SERVER_PORT);
 }
 
 
