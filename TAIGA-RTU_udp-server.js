@@ -67,8 +67,8 @@ server.on('message', function (message, remote) {
 		clients.splice(clients.indexOf(client), 1);
 	}
 	else if(message.toString().indexOf(SETPOINT_HEADER) > -1){
-		console.log('New set-point command relayed to PLC')
-		serialTAIGA.write(message.toString());
+		console.log('New set-point command relayed from ' + remote.address + ':' + remote.port)
+		serialTAIGA.write(message);
 	}
 });
 
