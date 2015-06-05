@@ -8,6 +8,8 @@ var dgram = require('dgram'); var server = dgram.createSocket('udp4');
 
 var stateVector = [];
 
+var triggerAsserted = false;
+
 var ADD_STRING = 'I am a supervisory HMI and want to monitor the Pendulum.'
 var REMOVE_STRING = 'Stop Streaming'
 var SETPOINT_HEADER = 'SP'
@@ -15,7 +17,7 @@ var SETPOINT_HEADER = 'SP'
 // Setup Serial Port 
 var SerialPort = require("serialport") 
 var serialTAIGA = new SerialPort.SerialPort(DEV_TAIGA, {
-  baudrate: 921600, parser: SerialPort.parsers.readline("---\n", "binary")
+  baudrate: 921600, parser: SerialPort.parsers.readline("--\n", "binary")
 }, false); // this is the openImmediately flag [default is true]
 
 serialTAIGA.open(function (error) {
@@ -32,9 +34,13 @@ serialTAIGA.open(function (error) {
 		stateVector.push(((data.charCodeAt(12)<< 24) | ((data.charCodeAt(13)&0xFF) << 16) | ((data.charCodeAt(14)&0xFF) << 8) | ((data.charCodeAt(15)&0xFF)))/1000);
 		stateVector.push(((data.charCodeAt(16)<< 24) | ((data.charCodeAt(17)&0xFF) << 16) | ((data.charCodeAt(18)&0xFF) << 8) | ((data.charCodeAt(19)&0xFF)))/10000);
 		
-		//console.log(stateVector);
+		if(data.charAt(20) != 'P' && !triggerAsserted){
+			console.log("Trigger Asserted by " + data.charAt(20));
+			console.log(stateVector);
+			triggerAsserted = true;
+		}
 		
-		var message = new Buffer(counter.toString() + ':' + stateVector.toString());
+		var message = new Buffer(counter.toString() + ':' + stateVector.toString() + ';' + data.charAt(20));
 		for(var i = 0; i < clients.length; i++){
 			server.send(message, 0, message.length, clients[i][1], clients[i][0], function(err, bytes) {
 				if (err) throw err;
