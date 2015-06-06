@@ -8,6 +8,8 @@ var dgram = require('dgram'); var server = dgram.createSocket('udp4');
 
 var stateVector = [];
 
+
+var mechanismsStarted = false;
 var triggerAsserted = false;
 
 var ADD_STRING = 'I am a supervisory HMI and want to monitor the Pendulum.'
@@ -34,6 +36,10 @@ serialTAIGA.open(function (error) {
 		stateVector.push(((data.charCodeAt(12)<< 24) | ((data.charCodeAt(13)&0xFF) << 16) | ((data.charCodeAt(14)&0xFF) << 8) | ((data.charCodeAt(15)&0xFF)))/1000);
 		stateVector.push(((data.charCodeAt(16)<< 24) | ((data.charCodeAt(17)&0xFF) << 16) | ((data.charCodeAt(18)&0xFF) << 8) | ((data.charCodeAt(19)&0xFF)))/10000);
 		
+		if((data.charAt(20) == 'S') && !mechanismsStarted){
+			console.log("IOI trigger mechanisms started.");
+		}
+
 		if((data.charAt(20) == 'T'|| data.charAt(20)=='G' || data.charAt(20)=='W') && !triggerAsserted){
 			console.log("Trigger Asserted by " + data.charAt(20));
 			console.log(stateVector);
