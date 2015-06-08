@@ -15,6 +15,8 @@ var triggerAsserted = false;
 var ADD_STRING = 'I am a supervisory HMI and want to monitor the Pendulum.'
 var REMOVE_STRING = 'Stop Streaming'
 var SETPOINT_HEADER = 'SP'
+var CLEAR_FLAGS_STRING = "Clear all flags for reset."
+
 
 // Setup Serial Port 
 var SerialPort = require("serialport") 
@@ -38,6 +40,7 @@ serialTAIGA.open(function (error) {
 		
 		if((data.charAt(20) == 'S') && !mechanismsStarted){
 			console.log("IOI trigger mechanisms started.");
+			mechanismsStarted = true;
 		}
 
 		if((data.charAt(20) == 'T'|| data.charAt(20)=='G' || data.charAt(20)=='W') && !triggerAsserted){
@@ -75,6 +78,11 @@ server.on('message', function (message, remote) {
 	else if(message.toString().indexOf(SETPOINT_HEADER) > -1){
 		console.log('New set-point command relayed from ' + remote.address + ':' + remote.port)
 		serialTAIGA.write(message);
+	}
+	else if (message.toString().indexOf(CLEAR_FLAGS_STRING) > -1){
+		console.log("Clearing all local flags for reset.");
+		mechanismsStarted = false;
+		triggerAsserted = false;
 	}
 });
 
