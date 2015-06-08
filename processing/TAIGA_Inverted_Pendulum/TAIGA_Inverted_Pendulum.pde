@@ -6,6 +6,8 @@ int CLIENT_PORT = 32392;
 
 String ADD_STRING = "I am a supervisory HMI and want to monitor the Pendulum.";
 String REMOVE_STRING = "Stop Streaming";
+String CLEAR_FLAGS_STRING = "Clear all flags for reset.";
+
 
 boolean addFlag = false;
 
@@ -21,7 +23,7 @@ float theta = 0.0;
 
 String stateVectorString = "[0,0,0,0]";
 
-float setPoint = -30;
+float setPoint = 0;
 String spString = "";
 String assertionFlag;
 
@@ -120,6 +122,7 @@ void keyPressed() {
   if (key == '0') {
     udp.send("SP" + fromCharCode(34), SERVER_HOST, SERVER_PORT);
   }
+
 }
 
 void mouseDragged() {
