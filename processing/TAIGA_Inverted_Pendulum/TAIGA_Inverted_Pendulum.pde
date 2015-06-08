@@ -7,7 +7,7 @@ int CLIENT_PORT = 32392;
 String ADD_STRING = "I am a supervisory HMI and want to monitor the Pendulum.";
 String REMOVE_STRING = "Stop Streaming";
 String CLEAR_FLAGS_STRING = "Clear all flags for reset.";
-
+int GUARD_THETA_OP = 35;
 
 boolean addFlag = false;
 
@@ -26,6 +26,7 @@ String stateVectorString = "[0,0,0,0]";
 float setPoint = 0;
 String spString = "";
 String assertionFlag;
+int limitLinesAngle = 90;
 
 void setup() {
   String[] ip = loadStrings("http://icanhazip.com/");
@@ -70,6 +71,13 @@ void draw() {
 
   text("Assertion Trigger State: " + assertionFlag, 0, 120-height/2);
 
+  // Limit Lines
+  stroke(200, 0, 0);
+  strokeWeight(2);
+  line(0, 0, 160*cos(radians(90-limitLinesAngle)), 160*sin(radians(limitLinesAngle+90)));
+  line(0, 0, 160*cos(radians(90+limitLinesAngle)), 160*sin(radians(limitLinesAngle+90)));
+
+  // Set-Point Line
   stroke(0, 255, 0);
   strokeWeight(2);
   line(75*cos(radians(90-setPoint)), 75*sin(radians(setPoint+90)), 160*cos(radians(90-setPoint)), 160*sin(radians(setPoint+90)));
@@ -161,6 +169,10 @@ void receive( byte[] data, String ip, int port ) {  // <-- extended handler
   statesStringArray = split(message, ',');
   stateVector = float(statesStringArray);
   stateVectorString = message;
+  if(assertionFlag == "S" || assertionFlag == "W" || assertionFlag == "T" || assertionFlag == "G"){
+    limitLinesAngle = GUARD_THETA_OP;
+  }
+  else limitLinesAngle = 90;
 }
 
 public static String fromCharCode(int... codePoints) {
