@@ -169,7 +169,8 @@ void receive( byte[] data, String ip, int port ) {  // <-- extended handler
   statesStringArray = split(message, ',');
   stateVector = float(statesStringArray);
   stateVectorString = message;
-  if(assertionFlag == "S" || assertionFlag == "W" || assertionFlag == "T" || assertionFlag == "G"){
+
+  if(assertionFlag.equals("S") || assertionFlag.equals("W") || assertionFlag.equals("T") || assertionFlag.equals("G")){
     limitLinesAngle = GUARD_THETA_OP;
   }
   else limitLinesAngle = 90;
